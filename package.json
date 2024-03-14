@@ -33,7 +33,7 @@
 		"views": {
 			"version-explorer": [
 				{
-					"id": "nodeDependencies",
+					"id": "versionExplorer",
 					"name": "Node Dependencies",
 					"icon": "media/dep.svg",
 					"contextualTitle": "Package Explorer"
@@ -42,7 +42,7 @@
 		},
 		"commands": [
 			{
-				"command": "nodeDependencies.refreshEntry",
+				"command": "versionExplorer.refreshEntry",
 				"title": "Refresh",
 				"icon": {
 					"light": "resources/light/refresh.svg",
@@ -50,11 +50,11 @@
 				}
 			},
 			{
-				"command": "nodeDependencies.addEntry",
+				"command": "versionExplorer.addEntry",
 				"title": "Add"
 			},
 			{
-				"command": "nodeDependencies.editEntry",
+				"command": "versionExplorer.editEntry",
 				"title": "Edit",
 				"icon": {
 					"light": "resources/light/edit.svg",
@@ -62,53 +62,53 @@
 				}
 			},
 			{
-				"command": "nodeDependencies.slice",
+				"command": "versionExplorer.slice",
 				"title": "Project slice",
 				"icon": "$(output)"
 			},
 			{
-				"command": "nodeDependencies.deleteEntry",
+				"command": "versionExplorer.deleteEntry",
 				"title": "Delete"
 			},
 			{
-				"command": "nodeDependencies.newReplace",
+				"command": "versionExplorer.newReplace",
 				"title": "Create replacement version..."
 			},
 			{
-				"command": "nodeDependencies.newUpgrade",
+				"command": "versionExplorer.newUpgrade",
 				"title": "Create upgrade version..."
 			}
 		],
 		"menus": {
 			"view/title": [
 				{
-					"command": "nodeDependencies.refreshEntry",
-					"when": "view == nodeDependencies",
+					"command": "versionExplorer.refreshEntry",
+					"when": "view == versionExplorer",
 					"group": "navigation"
 				},
 				{
-					"command": "nodeDependencies.addEntry",
-					"when": "view == nodeDependencies"
+					"command": "versionExplorer.addEntry",
+					"when": "view == versionExplorer"
 				}
 			],
 			"view/item/context": [
 				{
-					"command": "nodeDependencies.slice",
-					"when": "view == nodeDependencies && viewItem == version",
+					"command": "versionExplorer.slice",
+					"when": "view == versionExplorer && viewItem == version",
 					"group": "inline"
 				},
 				{
-					"command": "nodeDependencies.editEntry",
-					"when": "view == nodeDependencies && viewItem == version",
+					"command": "versionExplorer.editEntry",
+					"when": "view == versionExplorer && viewItem == version",
 					"group": "inline"
 				},
 				{
-					"command": "nodeDependencies.newReplace",
-					"when": "view == nodeDependencies && viewItem == version"
+					"command": "versionExplorer.newReplace",
+					"when": "view == versionExplorer && viewItem == version"
 				},
 				{
-					"command": "nodeDependencies.newUpgrade",
-					"when": "view == nodeDependencies && viewItem == version"
+					"command": "versionExplorer.newUpgrade",
+					"when": "view == versionExplorer && viewItem == version"
 				}
 			]
 		}
