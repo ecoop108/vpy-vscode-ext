@@ -31,7 +31,7 @@ function parseReport(): [ReportData] | null {
 }
 
 export function updateDiagnostics(document: vscode.TextDocument, collection: vscode.DiagnosticCollection): void {
-	const CMD = "python3 -m vpy.typechecker.pyanalyze"
+	const CMD = vscode.workspace.getConfiguration('vpy').get('pythonPath', 'python3') + " -m vpy.typechecker.pyanalyze";
 	function runShellCommand(): Promise<[ReportData] | null> {
 		return new Promise((resolve, reject) => {
 			cp.exec(`${CMD} ${document.fileName} --json-output ${REPORT_FILENAME}`, (error, stdout) => {
@@ -45,8 +45,6 @@ export function updateDiagnostics(document: vscode.TextDocument, collection: vsc
 			});
 		});
 	}
-
-
 
 	if (document) {
 		// Run command and get json output

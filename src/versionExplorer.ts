@@ -3,7 +3,7 @@ import * as fs from 'fs';
 import * as path from 'path';
 import * as cp from 'child_process';
 
-const CMD = "vpy"
+const CMD = vscode.workspace.getConfiguration('vpy').get('vpyPath', 'vpy');
 
 export class MyVirtualDocumentProvider implements vscode.TextDocumentContentProvider {
 	readonly onDidChangeEmitter = new vscode.EventEmitter<vscode.Uri>();
@@ -145,8 +145,8 @@ export class DepNodeProvider implements vscode.TreeDataProvider<TreeNode> {
 				if (this.pathExists(currentFilePath)) {
 					const result = await runShellCommand(`${CMD} -i ${currentFilePath} -g`);
 					const graph = JSON.parse(result)
-					const versionNodes: VersionNode[] = Object.keys(graph).map(versionKey => this.makeNode(versionKey, graph[versionKey]));
-					return versionNodes;
+					const classNodes: HeaderNode[] = Object.keys(graph).map(cls => this.makeClassNode(cls, graph[cls]));
+					return classNodes;
 				} else {
 					vscode.window.showInformationMessage('Workspace has no package.json');
 					return [];
@@ -166,10 +166,13 @@ export class DepNodeProvider implements vscode.TreeDataProvider<TreeNode> {
 
 		return true;
 	}
-
-	private makeNode(label: string, obj: any): any {
-		const branches = obj.branches.map((branch: { [x: string]: any; }) => Object.keys(branch).map(branchKey => this.makeNode(branchKey, branch[branchKey]))).reduce((acc: string | any[], current: any) => acc.concat(current), [])
-		const commits = obj.commits.map((commit: { [x: string]: any; }) => Object.keys(commit).map(commitKey => this.makeNode(commitKey, commit[commitKey]))).reduce((acc: string | any[], current: any) => acc.concat(current), [])
+	private makeClassNode(label: string, obj: any): HeaderNode {
+		const children = obj.map((v: any) => this.makeVersionNode(Object.keys(v)[0], v[Object.keys(v)[0]]))
+		return new HeaderNode(label, vscode.TreeItemCollapsibleState.Collapsed, new vscode.ThemeIcon('symbol-class'), children);
+	}
+	private makeVersionNode(label: string, obj: any): VersionNode {
+		const branches = obj.branches.map((branch: { [x: string]: any; }) => Object.keys(branch).map(branchKey => this.makeVersionNode(branchKey, branch[branchKey]))).reduce((acc: string | any[], current: any) => acc.concat(current), [])
+		const commits = obj.commits.map((commit: { [x: string]: any; }) => Object.keys(commit).map(commitKey => this.makeVersionNode(commitKey, commit[commitKey]))).reduce((acc: string | any[], current: any) => acc.concat(current), [])
 		return new VersionNode(label, (branches.length + commits.length) == 0 ? vscode.TreeItemCollapsibleState.None : vscode.TreeItemCollapsibleState.Collapsed, commits, branches)
 	}
 }

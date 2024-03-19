@@ -111,7 +111,24 @@
 					"when": "view == versionExplorer && viewItem == version"
 				}
 			]
-		}
+		},
+		"configuration": [
+			{
+				"title": "Versioned Python",
+				"properties": {
+					"vpy.pythonPath": {
+						"type": "string",
+						"default": "python3",
+						"description": "Path to the Python executable"
+					},
+					"vpy.vpyPath": {
+						"type": "string",
+						"default": "vpy",
+						"description": "Path to the vpy executable"
+					}
+				}
+			}
+		]
 	},
 	"scripts": {
 		"vscode:prepublish": "npm run compile",
