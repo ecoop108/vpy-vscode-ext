@@ -1,7 +1,6 @@
 'use strict';
 
 import * as vscode from 'vscode';
-import * as cp from 'child_process';
 
 import { DepNodeProvider, VersionNode, MyVirtualDocumentProvider } from './versionExplorer';
 import { MyCodeActionProvider } from './actions';
@@ -33,8 +32,9 @@ export function activate(context: vscode.ExtensionContext) {
 	if (vscode.window.activeTextEditor) {
 		updateDiagnostics(vscode.window.activeTextEditor.document, collection);
 	}
+
 	context.subscriptions.push(vscode.workspace.onDidSaveTextDocument(document => {
-		if (document) {
+		if (vscode.window.activeTextEditor && vscode.window.activeTextEditor.document === document) {
 			updateDiagnostics(document, collection);
 		}
 	}));
