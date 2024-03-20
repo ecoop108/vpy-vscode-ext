@@ -29,15 +29,17 @@ export function activate(context: vscode.ExtensionContext) {
 
 	// Setup diagnostic reporting from type checker
 	const collection = vscode.languages.createDiagnosticCollection('pyanalyze');
-	if (vscode.window.activeTextEditor) {
-		updateDiagnostics(vscode.window.activeTextEditor.document, collection);
-	}
-
+	vscode.workspace.findFiles('**/*.py').then(uris => {
+		uris.forEach(uri => {
+			// Read each Python file and update diagnostics
+			vscode.workspace.openTextDocument(uri).then(document => {
+				updateDiagnostics(document, collection);
+			});
+		});
+	});
 	context.subscriptions.push(vscode.workspace.onDidSaveTextDocument(document => {
-		if (vscode.window.activeTextEditor && vscode.window.activeTextEditor.document === document) {
+		if (document.languageId === 'python') {
 			updateDiagnostics(document, collection);
 		}
 	}));
-
-
 }

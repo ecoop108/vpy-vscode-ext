@@ -1,6 +1,5 @@
 import * as vscode from 'vscode';
 import * as cp from 'child_process';
-import * as fs from 'fs';
 
 interface ReportData {
 	description: string;
@@ -15,14 +14,10 @@ interface ReportData {
 	message: string;
 }
 
-const REPORT_FILENAME = "/tmp/.pyanalyze_report"
-
-function parseReport(): [ReportData] | null {
+function parseReport(report: string): [ReportData] | null {
 	try {
-		// Read the file synchronously
-		const fileContent = fs.readFileSync(REPORT_FILENAME, 'utf-8');
 		// Parse the JSON content
-		const jsonData: [ReportData] = JSON.parse(fileContent);
+		const jsonData: [ReportData] = JSON.parse(report);
 		return jsonData;
 	} catch (error) {
 		console.error('Error parsing JSON:', error);
@@ -34,14 +29,15 @@ export function updateDiagnostics(document: vscode.TextDocument, collection: vsc
 	const CMD = vscode.workspace.getConfiguration('vpy').get('pythonPath', 'python3') + " -m vpy.typechecker.pyanalyze";
 	function runShellCommand(): Promise<[ReportData] | null> {
 		return new Promise((resolve, reject) => {
-			cp.exec(`${CMD} ${document.fileName} --json-output ${REPORT_FILENAME}`, (error, stdout) => {
-
-				if (error) {
-					const reportData = parseReport();
+			cp.exec(`${CMD} ${document.fileName} --json-output`, (error, stdout) => {
+				if (stdout) {
+					const reportData = parseReport(stdout);
 					resolve(reportData);
 					return
 				}
-				resolve(null)
+				if (error) {
+					reject(error)
+				}
 			});
 		});
 	}
@@ -62,6 +58,8 @@ export function updateDiagnostics(document: vscode.TextDocument, collection: vsc
 				source: "Pyanalyze",
 				relatedInformation: [],
 			})));
+		}).catch((error) => {
+			return;
 		})
 	} else {
 		collection.clear();
