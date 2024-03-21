@@ -46,7 +46,7 @@ export function updateDiagnostics(document: vscode.TextDocument, collection: vsc
 		// Run command and get json output
 		runShellCommand().then((output) => {
 			if (output == null) {
-				collection.clear();
+				collection.delete(document.uri);
 				return
 			}
 
@@ -59,6 +59,7 @@ export function updateDiagnostics(document: vscode.TextDocument, collection: vsc
 				relatedInformation: [],
 			})));
 		}).catch((error) => {
+			collection.delete(document.uri);
 			return;
 		})
 	} else {
