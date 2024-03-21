@@ -35,7 +35,7 @@ export function updateDiagnostics(document: vscode.TextDocument, collection: vsc
 					resolve(reportData);
 					return
 				}
-				if (error) {
+				else {
 					reject(error)
 				}
 			});
